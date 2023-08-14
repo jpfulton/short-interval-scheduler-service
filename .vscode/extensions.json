@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "ms-dotnettools.csharp",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github",
+    "esbenp.prettier-vscode"
+  ]
+}
