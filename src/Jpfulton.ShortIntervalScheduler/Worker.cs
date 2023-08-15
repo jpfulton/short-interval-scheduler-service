@@ -51,7 +51,11 @@ public class Worker : BackgroundService
                 {
 
                     // start external process and wait on exit
-                    p.Start();
+                    var processStarted = p.Start();
+                    if (!processStarted) {
+                        _logger.LogError($"Failed to start command: {cmd}");
+                        throw new Exception("Failed to start command.");
+                    }
                     await p.WaitForExitAsync(stoppingToken);
                 }
 
