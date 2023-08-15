@@ -11,7 +11,7 @@ public class Options {
 
   public static Options GetOptionsFromArgs(string[] args) {
     if (args.Length != 2) {
-      throw new Exception("Expected two command line arguments: delayInSeconds, command");
+      throw new Exception($"Expected two command line arguments: command, delayInSeconds. Found {args.Length} arguments.");
     }
 
     string command = args[0];
