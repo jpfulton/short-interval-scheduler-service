@@ -3,10 +3,7 @@ using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Logging.EventLog;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddWindowsService(options =>
-{
-    options.ServiceName = ".NET Short Interval Scheduler Service";
-});
+builder.Services.AddWindowsService();
 
 LoggerProviderOptions.RegisterProviderOptions<
     EventLogSettings, EventLogLoggerProvider>(builder.Services);
@@ -19,7 +16,7 @@ try
 }
 catch (Exception e)
 {
-    logger.LogError(e, "Unable to build service options.");
+    logger.LogError(e, "Unable to build service options. Shutting down...");
     Environment.Exit(1);
 }
 
@@ -30,5 +27,8 @@ builder.Services.AddHostedService<Worker>();
 builder.Logging.AddConfiguration(
     builder.Configuration.GetSection("Logging"));
 
+logger.LogInformation("Configuring service...");
 IHost host = builder.Build();
+
+logger.LogInformation("Starting service loop...");
 host.Run();
