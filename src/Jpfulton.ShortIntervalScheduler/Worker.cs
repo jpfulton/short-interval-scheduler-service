@@ -43,9 +43,9 @@ public class Worker : BackgroundService
                         FileName = cmd,
                         Arguments = cmdArgs,
                         RedirectStandardInput = false,
-                        RedirectStandardError = true,
+                        RedirectStandardError = false,
                         UseShellExecute = true,
-                        RedirectStandardOutput = true,
+                        RedirectStandardOutput = false,
                         CreateNoWindow = false
                     }
                 })
