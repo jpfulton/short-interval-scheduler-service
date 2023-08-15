@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Jpfulton.ShortIntervalScheduler;
 
 public class Options {
@@ -11,7 +13,13 @@ public class Options {
 
   public static Options GetOptionsFromArgs(string[] args) {
     if (args.Length != 2) {
-      throw new Exception($"Expected two command line arguments: command, delayInSeconds. Found {args.Length} arguments.");
+      var msgBuilder = new StringBuilder();
+      msgBuilder.AppendLine($"Expected two command line arguments: command, delayInSeconds. Found {args.Length} arguments.");
+      foreach (var arg in args) {
+        msgBuilder.AppendLine($"Found arg: \"{arg}\"");
+      }
+      
+      throw new Exception(msgBuilder.ToString());
     }
 
     string command = args[0];
