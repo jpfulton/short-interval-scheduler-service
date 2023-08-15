@@ -84,11 +84,11 @@ jobs:
           dotnet-version: "7.0.x"
 
       - name: Install dependencies
-        working-directory: /src
+        working-directory: src
         run: dotnet restore
 
       - name: Build
-        working-directory: /src
+        working-directory: src
         run: dotnet build --configuration Release --no-restore
 
   tag-release-and-publish:
@@ -115,11 +115,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
-        working-directory: /src
+        working-directory: src
         run: dotnet restore
 
       - name: Publish
-        working-directory: /src
+        working-directory: src
         run: dotnet publish --configuration Release --no-restore
 
       - name: Create a GitHub release
