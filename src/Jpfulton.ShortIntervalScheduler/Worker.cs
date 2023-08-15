@@ -50,9 +50,6 @@ public class Worker : BackgroundService
                     }
                 })
                 {
-
-                    _logger.LogInformation("Running  external command.");
-
                     // start external process and wait on exit
                     var processStarted = p.Start();
                     if (!processStarted) {
@@ -67,19 +64,20 @@ public class Worker : BackgroundService
 
                     await p.WaitForExitAsync(stoppingToken);
 
-                    var sb = new StringBuilder();
-                    sb.AppendLine("Command Standard Output:");
-                    sb.AppendLine(output);
-                    sb.AppendLine("---");
-                    sb.AppendLine("Command Standard Error:");
-                    sb.AppendLine(error);
-                    sb.AppendLine("---");
-                    _logger.LogInformation(sb.ToString());
-
                     var exitCode = p.ExitCode;
                     if (exitCode > 0) {
                         var msg = $"Command exited with error code: {exitCode}";
                         _logger.LogError(msg);
+
+                        var sb = new StringBuilder();
+                        sb.AppendLine("Command Standard Output:");
+                        sb.AppendLine(output);
+                        sb.AppendLine("---");
+                        sb.AppendLine("Command Standard Error:");
+                        sb.AppendLine(error);
+                        sb.AppendLine("---");
+                        _logger.LogInformation(sb.ToString());
+
                         throw new Exception(msg);
                     }
                 }
