@@ -28,7 +28,7 @@ public class Worker : BackgroundService
             var argList = cmdArray.ToList();
             argList.RemoveAt(0); // remove the command leaving args behind
 
-            cmdArgs = string.Join("", argList);
+            cmdArgs = string.Join(" ", argList);
         }
 
         try
@@ -43,7 +43,7 @@ public class Worker : BackgroundService
                         Arguments = cmdArgs,
                         RedirectStandardInput = false,
                         RedirectStandardError = false,
-                        UseShellExecute = true,
+                        UseShellExecute = false,
                         RedirectStandardOutput = false,
                         CreateNoWindow = false
                     }
