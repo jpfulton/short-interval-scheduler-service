@@ -32,9 +32,10 @@ public class Worker : BackgroundService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var p = new Process
+                using (var p = new Process
                 {
-                    StartInfo = new ProcessStartInfo {
+                    StartInfo = new ProcessStartInfo
+                    {
                         FileName = cmd,
                         Arguments = cmdArgs,
                         RedirectStandardInput = false,
@@ -43,11 +44,13 @@ public class Worker : BackgroundService
                         RedirectStandardOutput = true,
                         CreateNoWindow = false
                     }
-                };
-                
-                // start external process and wait on exit
-                p.Start();
-                await p.WaitForExitAsync(stoppingToken);
+                })
+                {
+
+                    // start external process and wait on exit
+                    p.Start();
+                    await p.WaitForExitAsync(stoppingToken);
+                }
 
                 // delay between runs
                 await Task.Delay(TimeSpan.FromSeconds(_options.DelayInSeconds), stoppingToken);
