@@ -1,21 +1,56 @@
+using System.Diagnostics;
+
 namespace Jpfulton.ShortIntervalScheduler;
 
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
+    private readonly Options _options;
 
-    public Worker(ILogger<Worker> logger)
+    public Worker(ILogger<Worker> logger, Options options)
     {
         _logger = logger;
+        _options = options;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var cmdArray = _options.Command.Split(" ");
+        var cmd = cmdArray[0];
+
+        var cmdArgs = string.Empty;
+        if (cmdArray.Length > 1)
+        {
+            // args exist
+            var argList = cmdArray.ToList();
+            argList.RemoveAt(0); // remove the command leaving args behind
+
+            cmdArgs = string.Join("", argList);
+        }
+
         try
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                var p = new Process
+                {
+                    StartInfo = new ProcessStartInfo {
+                        FileName = cmd,
+                        Arguments = cmdArgs,
+                        RedirectStandardInput = false,
+                        RedirectStandardError = true,
+                        UseShellExecute = true,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = false
+                    }
+                };
+                
+                // start external process and wait on exit
+                p.Start();
+                await p.WaitForExitAsync(stoppingToken);
+
+                // delay between runs
+                await Task.Delay(TimeSpan.FromSeconds(_options.DelayInSeconds), stoppingToken);
             }
         }
         catch (TaskCanceledException)
