@@ -15,6 +15,10 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Starting service execution loop.");
+        _logger.LogInformation($"Using delay between command runs: {_options.DelayInSeconds}");
+        _logger.LogInformation($"Using command: '{_options.Command}'.");
+
         var cmdArray = _options.Command.Split(" ");
         var cmd = cmdArray[0];
 
