@@ -122,6 +122,11 @@ jobs:
         working-directory: src
         run: dotnet publish --configuration Release --no-restore
 
+      - uses: vimtor/action-zip@v1
+        with:
+          files: src/Jpfulton.ShortIntervalScheduler/bin/Release/net7.0-windows/win-x64/publish/
+          dest: "binaries-win-x64-${{ steps.tag_version.outputs.new_tag }}.zip"
+
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
@@ -129,3 +134,4 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
+          artifacts: "binaries-win-x64-${{ steps.tag_version.outputs.new_tag }}.zip"
