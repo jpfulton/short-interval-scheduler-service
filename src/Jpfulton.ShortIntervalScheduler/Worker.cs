@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 
 namespace Jpfulton.ShortIntervalScheduler;
 
@@ -42,10 +43,10 @@ public class Worker : BackgroundService
                         FileName = cmd,
                         Arguments = cmdArgs,
                         RedirectStandardInput = false,
-                        RedirectStandardError = false,
+                        RedirectStandardError = true,
                         UseShellExecute = false,
-                        RedirectStandardOutput = false,
-                        CreateNoWindow = false
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
                     }
                 })
                 {
@@ -56,7 +57,30 @@ public class Worker : BackgroundService
                         _logger.LogError($"Failed to start command: {cmd}");
                         throw new Exception("Failed to start command.");
                     }
+
+                    var stdOutReader = p.StandardOutput;
+                    var stdErrorReader = p.StandardError;
+                    var output = await stdOutReader.ReadToEndAsync();
+                    var error = await stdErrorReader.ReadToEndAsync();
+
                     await p.WaitForExitAsync(stoppingToken);
+
+                    var exitCode = p.ExitCode;
+                    if (exitCode > 0) {
+                        var msg = $"Command exited with error code: {exitCode}";
+                        _logger.LogError(msg);
+
+                        var sb = new StringBuilder();
+                        sb.AppendLine("Command Standard Output:");
+                        sb.AppendLine(output);
+                        sb.AppendLine("---");
+                        sb.AppendLine("Command Standard Error:");
+                        sb.AppendLine(error);
+                        sb.AppendLine("---");
+                        _logger.LogError(sb.ToString());
+
+                        throw new Exception(msg);
+                    }
                 }
 
                 // delay between runs
