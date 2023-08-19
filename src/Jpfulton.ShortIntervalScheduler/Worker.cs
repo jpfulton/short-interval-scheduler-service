@@ -59,8 +59,8 @@ public class Worker : BackgroundService
 
                     var stdOutReader = p.StandardOutput;
                     var stdErrorReader = p.StandardError;
-                    var output = await stdOutReader.ReadToEndAsync();
-                    var error = await stdErrorReader.ReadToEndAsync();
+                    var output = await stdOutReader.ReadToEndAsync(stoppingToken);
+                    var error = await stdErrorReader.ReadToEndAsync(stoppingToken);
 
                     await p.WaitForExitAsync(stoppingToken);
 
