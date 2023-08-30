@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/jpfulton/short-interval-scheduler-service/actions/workflows/ci.yml/badge.svg)](https://github.com/jpfulton/short-interval-scheduler-service/actions/workflows/ci.yml)
 ![License](https://img.shields.io/badge/License-MIT-blue)
-![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jpfulton.ashort-interval-scheduler-service)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jpfulton.short-interval-scheduler-service)
 
 A short interval command scheduling Windows service implemented in .NET 7.
 
